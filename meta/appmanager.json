@@ -1,0 +1,22 @@
+{
+  "name": "AppManager",
+  "repo": "muntashirakon/AppManager",
+  "description": "Advanced Android app manager with root & non-root features.",
+  "tags": [
+    "android",
+    "root",
+    "privacy",
+    "tools"
+  ],
+  "notes": "Used for my Android App Management and Hardening",
+  "project_status": "active",
+  "sync_enabled": true,
+  "operating_systems": [
+    "Android"
+  ],
+  "runtime": [
+    "Java",
+    "Shizuku",
+    "Magisk"
+  ]
+}

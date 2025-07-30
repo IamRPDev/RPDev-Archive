@@ -1,0 +1,19 @@
+{
+  "name": "Universal Android Debloater NG",
+  "repo": "IamRPDev/universal-android-debloater-next-generation",
+  "description": "Next-gen fork of UAD focused on maintainability and automation.",
+  "tags": [
+    "android",
+    "debloat",
+    "automation"
+  ],
+  "notes": "Main format target for all device/app removals.",
+  "project_status": "active",
+  "sync_enabled": true,
+  "operating_systems": [
+    "Android"
+  ],
+  "runtime": [
+    "Python"
+  ]
+}

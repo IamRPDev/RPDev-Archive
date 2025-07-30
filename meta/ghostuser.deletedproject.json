@@ -1,0 +1,19 @@
+{
+  "name": "DeadProject (Deleted)",
+  "repo": "ghostuser/deletedproject",
+  "url": "https://github.com/ghostuser/deletedproject",
+  "description": "Repository no longer available. Mirror retained for history.",
+  "tags": [
+    "dead",
+    "history"
+  ],
+  "notes": "Deleted upstream. May remove mirror later.",
+  "project_status": "deleted",
+  "sync_enabled": false,
+  "operating_systems": [
+    "Cross-platform"
+  ],
+  "runtime": [
+    "Rust"
+  ]
+}

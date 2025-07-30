@@ -1,0 +1,19 @@
+{
+  "name": "OldTool (Archived)",
+  "repo": "exampleuser/oldtool",
+  "url": "https://github.com/exampleuser/oldtool",
+  "description": "Deprecated CLI utility. Kept for historical reference.",
+  "tags": [
+    "cli",
+    "deprecated"
+  ],
+  "notes": "Manually removed from system; exists only for legacy audit.",
+  "project_status": "archived",
+  "sync_enabled": false,
+  "operating_systems": [
+    "Linux"
+  ],
+  "runtime": [
+    "Go"
+  ]
+}
