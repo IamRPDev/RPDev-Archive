@@ -1,4 +1,3 @@
-
 name: Mirror Repositories
 
 on:
@@ -11,7 +10,7 @@ jobs:
   mirror:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout mirror repo
+      - name: Checkout this repo
         uses: actions/checkout@v4
 
       - name: Set up Git
@@ -22,34 +21,33 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      - name: Mirror projects
+      - name: Mirror projects from meta/
         run: |
           set -e
           mkdir -p mirrors
 
           for file in meta/*.json; do
-            echo "Processing $file..."
+            echo "🔄 Processing $file..."
+
             REPO=$(jq -r '.repo' "$file")
             NAME=$(jq -r '.name' "$file" | sed 's/ (Archived)//;s/ (Deleted)//')
             ENABLED=$(jq -r '.sync_enabled' "$file")
 
             if [ "$ENABLED" != "true" ]; then
-              echo "Skipping $NAME (sync disabled)"
+              echo "⚠️ Skipping $NAME (sync disabled)"
               continue
             fi
 
             DEST="mirrors/$NAME"
 
             if [ -d "$DEST/.git" ]; then
-              echo "Updating $NAME..."
-              git -C "$DEST" remote set-url origin https://github.com/$REPO.git || true
-              git -C "$DEST" fetch origin || true
-              git -C "$DEST" reset --hard origin/HEAD
+              echo "🔁 Updating $NAME..."
+              git -C "$DEST" fetch origin || continue
+              DEFAULT_BRANCH=$(git -C "$DEST" remote show origin | awk '/HEAD branch/ { print $NF }')
+              git -C "$DEST" reset --hard "origin/$DEFAULT_BRANCH"
             else
-              echo "Cloning $NAME..."
-              git clone --mirror https://github.com/$REPO.git "$DEST/.git"
-              git -C "$DEST" config --bool core.bare false
-              git -C "$DEST" checkout
+              echo "📥 Cloning $NAME..."
+              git clone "https://github.com/$REPO.git" "$DEST"
             fi
           done
 
