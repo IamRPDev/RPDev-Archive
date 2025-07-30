@@ -1,1 +1,60 @@
 
+name: Mirror Repositories
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'meta/*.json'
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout mirror repo
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "mirror-bot"
+          git config --global user.email "mirror-bot@users.noreply.github.com"
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Mirror projects
+        run: |
+          set -e
+          mkdir -p mirrors
+
+          for file in meta/*.json; do
+            echo "Processing $file..."
+            REPO=$(jq -r '.repo' "$file")
+            NAME=$(jq -r '.name' "$file" | sed 's/ (Archived)//;s/ (Deleted)//')
+            ENABLED=$(jq -r '.sync_enabled' "$file")
+
+            if [ "$ENABLED" != "true" ]; then
+              echo "Skipping $NAME (sync disabled)"
+              continue
+            fi
+
+            DEST="mirrors/$NAME"
+
+            if [ -d "$DEST/.git" ]; then
+              echo "Updating $NAME..."
+              git -C "$DEST" remote set-url origin https://github.com/$REPO.git || true
+              git -C "$DEST" fetch origin || true
+              git -C "$DEST" reset --hard origin/HEAD
+            else
+              echo "Cloning $NAME..."
+              git clone --mirror https://github.com/$REPO.git "$DEST/.git"
+              git -C "$DEST" config --bool core.bare false
+              git -C "$DEST" checkout
+            fi
+          done
+
+      - name: Commit changes if any
+        run: |
+          git add mirrors/
+          git diff --cached --quiet || git commit -m "Mirror sync: $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
